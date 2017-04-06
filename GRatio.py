@@ -40,14 +40,16 @@ def SaveStoptokens():
     open(fn, 'wt').write(stoptextEntryText.get())
 
 
-def ProcessText():
+def ProcessText(multiplier):
     global hType
     inputText = textBox.get('1.0', 'end')
     stopTokens = stoptextEntryText.get()
-    try:
-        multiplier = float(multipliervalueEntryText.get())
-    except ValueError:
-        raise ValueError("multiplier value is not a float")
+
+    if multiplier is None:
+        try:
+            multiplier = float(multipliervalueEntryText.get())
+        except ValueError:
+            raise ValueError("multiplier value is not a float")
 
     sentenses = re.split("\n+|\.+|\?+|!+", inputText)
     stopTokens = re.split(",", stopTokens)
@@ -59,38 +61,54 @@ def ProcessText():
     print("Stop tokens: ", stopTokens)
     print("Multiplier: ", multiplier)
 
+    allTokens = []
+
     for s in sentenses:
         tokens = re.split("[^а-яА-ЯёЁa-zA-Z0-9-]+", s)
         tokens = [i.strip() for i in tokens]
         if '' in tokens:
             tokens.remove('')
         tokens = [i for i in tokens if i not in stopTokens]
+
         if len(tokens) == 0:
             continue
+
+        allTokens += tokens
         
         print("Sentense: ", s, "\nTokens: ", tokens, " Length: ", len(tokens))
 
         harmonicCenterRaw = len(tokens) * multiplier
-
-        print("Harmonic center(raw):", harmonicCenterRaw)
-
+        
+        print("Local harmonic center(raw):", harmonicCenterRaw)
+        
         harmonicCenter = harmonicCenterRaw
 
         if hType.get() == 1:
             harmonicCenter = floor(harmonicCenter)
-            print("Harmonic center(floor):", harmonicCenter, "Word: ", tokens[harmonicCenter-1])
         elif hType.get() == 2:
             harmonicCenter = round(harmonicCenter)
-            print("Harmonic center(round):", harmonicCenter, "Word: ", tokens[harmonicCenter-1])
         elif hType.get() == 3:
             harmonicCenter = ceil(harmonicCenter)
-            print("Harmonic center(ceil):", harmonicCenter, "Word: ", tokens[harmonicCenter-1])
         else:
             raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
     
-        resultBox.insert(END, "\n{0} {1} {2}".format(tokens[harmonicCenter-1], harmonicCenterRaw, harmonicCenter))
-        
+        resultBox.insert(END, "{0} {1} {2}\n".format(tokens[harmonicCenter-1], harmonicCenterRaw, harmonicCenter))
 
+    absHarmonicCenterRaw = len(allTokens) * multiplier
+    print("Absolute harmonic center(raw):", absHarmonicCenterRaw)
+
+    absHarmonicCenter = absHarmonicCenterRaw
+    if hType.get() == 1:
+        absHarmonicCenter = floor(absHarmonicCenter)
+    elif hType.get() == 2:
+        absHarmonicCenter = round(absHarmonicCenter)
+    elif hType.get() == 3:
+        absHarmonicCenter = ceil(absHarmonicCenter)
+    else:
+        raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
+    resultBox.insert(END, "\n{0} {1} {2}\n".format(allTokens[absHarmonicCenter-1], absHarmonicCenterRaw, absHarmonicCenter))
+
+                     
 root = Tk()
 
 
@@ -134,7 +152,10 @@ loadtextBtn = Button(inputFrame, text = 'Open document', command = LoadText)
 loadstoptextBtn = Button(inputFrame, text = 'Open', command = LoadStoptokens)
 savestoptextBtn = Button(inputFrame, text = 'Save', command = SaveStoptokens)
 saveresultsBtn = Button(outputFrame, text = 'Save results', command = SaveResults)
-processtextBtn = Button(inputFrame, text = 'Process', command = ProcessText)
+processtextBtn = Button(inputFrame, text = 'Process', command = lambda: ProcessText(None))
+centerPosBtn = Button(inputFrame, text = '0.618', command = lambda: ProcessText(0.618))
+leftPosBtn = Button(inputFrame, text = '-0.236', command = lambda: ProcessText(0.382))
+rightPosBtn = Button(inputFrame, text = '+0.236', command = lambda: ProcessText(0.854))
 
 
 ### CHECKBOXES
@@ -151,7 +172,7 @@ roundCheckBtn.select()
 ### INPUT FRAME ITEMS PACKING
 
 loadtextBtn.pack(side=TOP, fill="x")
-textBox.pack(side=TOP, fill="y", expand=True)
+textBox.pack(side=TOP, fill="both", expand=True)
 stoptextLabel.pack(side=LEFT)
 stoptextEntry.pack(side=LEFT)
 loadstoptextBtn.pack(side=LEFT)
@@ -159,9 +180,13 @@ savestoptextBtn.pack(side=LEFT)
 multipliervalueLabel.pack(side=LEFT)
 multipliervalueEntry.pack(side=LEFT)
 processtextBtn.pack(side=LEFT)
-floorCheckBtn.pack(side=LEFT)
-roundCheckBtn.pack(side=LEFT)
-ceilCheckBtn.pack(side=LEFT)
+leftPosBtn.pack(side=LEFT)
+centerPosBtn.pack(side=LEFT)
+rightPosBtn.pack(side=LEFT)
+floorCheckBtn.pack(side=TOP)
+roundCheckBtn.pack(side=TOP)
+ceilCheckBtn.pack(side=TOP)
+
 
 ### OUTPUT FIELD ITEMS PACKING
 
