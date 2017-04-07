@@ -94,6 +94,9 @@ def ProcessText(multiplier):
     
         resultBox.insert(END, "{0} {1} {2}\n".format(tokens[harmonicCenter-1], harmonicCenterRaw, harmonicCenter))
 
+    if len(allTokens) == 0:
+        return
+    
     absHarmonicCenterRaw = len(allTokens) * multiplier
     print("Absolute harmonic center(raw):", absHarmonicCenterRaw)
 
