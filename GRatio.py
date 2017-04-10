@@ -5,6 +5,12 @@ from tkinter import filedialog as tkFileDialog
 from math import floor, ceil
 import re
 
+
+FLOOR = 1
+ROUND = 2
+CEIL = 3
+
+
 def SaveResults():
     fn = tkFileDialog.SaveAs(root, filetypes = [('*.txt files', '.txt')]).show()
     if fn == '':
@@ -45,12 +51,6 @@ def ProcessText(multiplier):
     inputText = textBox.get('1.0', 'end')
     stopTokens = stoptextEntryText.get()
 
-    if multiplier is None:
-        try:
-            multiplier = float(multipliervalueEntryText.get())
-        except ValueError:
-            raise ValueError("multiplier value is not a float")
-
     sentenses = re.split("\n+|\.+|\?+|!+", inputText)
     stopTokens = re.split(",", stopTokens)
     stopTokens = [i.strip() for i in stopTokens]
@@ -83,11 +83,11 @@ def ProcessText(multiplier):
         
         harmonicCenter = harmonicCenterRaw
 
-        if hType.get() == 1:
+        if hType.get() == FLOOR:
             harmonicCenter = floor(harmonicCenter)
-        elif hType.get() == 2:
+        elif hType.get() == ROUND:
             harmonicCenter = round(harmonicCenter)
-        elif hType.get() == 3:
+        elif hType.get() == CEIL:
             harmonicCenter = ceil(harmonicCenter)
         else:
             raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
@@ -101,17 +101,37 @@ def ProcessText(multiplier):
     print("Absolute harmonic center(raw):", absHarmonicCenterRaw)
 
     absHarmonicCenter = absHarmonicCenterRaw
-    if hType.get() == 1:
+    if hType.get() == FLOOR:
         absHarmonicCenter = floor(absHarmonicCenter)
-    elif hType.get() == 2:
+    elif hType.get() == ROUND:
         absHarmonicCenter = round(absHarmonicCenter)
-    elif hType.get() == 3:
+    elif hType.get() == CEIL:
         absHarmonicCenter = ceil(absHarmonicCenter)
     else:
         raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
     resultBox.insert(END, "\n{0} {1} {2}\n".format(allTokens[absHarmonicCenter-1], absHarmonicCenterRaw, absHarmonicCenter))
 
-                     
+
+def GetMultiplier():
+    try:
+        multiplier = float(multipliervalueEntryText.get())
+        return multiplier
+    except ValueError:
+        raise ValueError("multiplier value is not a float")
+    
+
+def ProcessCenterPos():
+    ProcessText(GetMultiplier())
+    
+
+def ProcessLeftPos():
+    ProcessText(GetMultiplier()-0.236)
+
+
+def ProcessRightPos():
+    ProcessText(GetMultiplier()+0.236)
+
+    
 root = Tk()
 
 
@@ -120,6 +140,10 @@ root = Tk()
 rootFrame = Frame(root)
 inputFrame = LabelFrame(rootFrame, text="Input")
 outputFrame = LabelFrame(rootFrame, text="Output")
+inputOptionsFrame = Frame(inputFrame)
+outputOptionsFrame = Frame(outputFrame)
+inputOptionsMultiplierFrame = LabelFrame(inputOptionsFrame, text="Multiplier:")
+inputOptionsRoundingFrame = LabelFrame(inputOptionsFrame, text="Rounding type:")
 
 
 ### FRAME PACKING
@@ -137,37 +161,38 @@ resultBox = Text(outputFrame, font='Arial 14', wrap='word')
 
 ### LABELS
 
-stoptextLabel = Label(inputFrame, text="Tokens to exclude:")
-multipliervalueLabel = Label(inputFrame, text="Multiplier:")
+stoptextLabel = Label(inputOptionsFrame, text="Tokens to exclude:")
+multipliervalueLabel = Label(inputOptionsFrame, text="Multiplier:")
 
 
 ### ENTRIES & STRINGVARS DECLARATIONS
 
 stoptextEntryText = StringVar()
-stoptextEntry = Entry(inputFrame, font='Arial 14', textvariable=stoptextEntryText)
+stoptextEntry = Entry(inputOptionsFrame, font='Arial 14', textvariable=stoptextEntryText)
 multipliervalueEntryText = StringVar(value="0.618")
-multipliervalueEntry = Entry(inputFrame, font='Arial 14', textvariable=multipliervalueEntryText)
+multipliervalueEntry = Entry(inputOptionsFrame, font='Arial 14', textvariable=multipliervalueEntryText)
 
 
 ### BUTTONS
 
 loadtextBtn = Button(inputFrame, text = 'Open document', command = LoadText)
-loadstoptextBtn = Button(inputFrame, text = 'Open', command = LoadStoptokens)
-savestoptextBtn = Button(inputFrame, text = 'Save', command = SaveStoptokens)
+loadstoptextBtn = Button(inputOptionsFrame, text = 'Open', command = LoadStoptokens)
+savestoptextBtn = Button(inputOptionsFrame, text = 'Save', command = SaveStoptokens)
 saveresultsBtn = Button(outputFrame, text = 'Save results', command = SaveResults)
-processtextBtn = Button(inputFrame, text = 'Process', command = lambda: ProcessText(None))
-centerPosBtn = Button(inputFrame, text = '0.618', command = lambda: ProcessText(0.618))
-leftPosBtn = Button(inputFrame, text = '-0.236', command = lambda: ProcessText(0.382))
-rightPosBtn = Button(inputFrame, text = '+0.236', command = lambda: ProcessText(0.854))
 
 
-### CHECKBOXES
+leftPosBtn = Button(inputOptionsMultiplierFrame, text = '-0.236', command = lambda: ProcessLeftPos())
+centerPosBtn = Button(inputOptionsMultiplierFrame, text = 'Process', command = lambda: ProcessCenterPos())
+rightPosBtn = Button(inputOptionsMultiplierFrame, text = '+0.236', command = lambda: ProcessRightPos())
+
+
+### RADIOBUTTONS
 
 hType = IntVar()
 
-floorCheckBtn = Checkbutton(inputFrame, text="Floor", variable=hType, onvalue=1, offvalue=hType.get(), command=lambda i=hType: print("Operation type now:", i.get()))
-roundCheckBtn = Checkbutton(inputFrame, text="Round", variable=hType, onvalue=2, offvalue=hType.get(), command=lambda i=hType: print("Operation type now:", i.get()))
-ceilCheckBtn = Checkbutton(inputFrame, text="Ceil", variable=hType, onvalue=3, offvalue=hType.get(), command=lambda i=hType: print("Operation type now:", i.get()))
+floorCheckBtn = Radiobutton(inputOptionsRoundingFrame, text="Floor", value=FLOOR, variable=hType)
+roundCheckBtn = Radiobutton(inputOptionsRoundingFrame, text="Round", value=ROUND, variable=hType)
+ceilCheckBtn = Radiobutton(inputOptionsRoundingFrame, text="Ceil", value=CEIL, variable=hType)
 
 roundCheckBtn.select()
 
@@ -176,19 +201,32 @@ roundCheckBtn.select()
 
 loadtextBtn.pack(side=TOP, fill="x")
 textBox.pack(side=TOP, fill="both", expand=True)
+
+
+inputOptionsFrame.pack()
+
 stoptextLabel.pack(side=LEFT)
 stoptextEntry.pack(side=LEFT)
 loadstoptextBtn.pack(side=LEFT)
 savestoptextBtn.pack(side=LEFT)
 multipliervalueLabel.pack(side=LEFT)
 multipliervalueEntry.pack(side=LEFT)
-processtextBtn.pack(side=LEFT)
-leftPosBtn.pack(side=LEFT)
-centerPosBtn.pack(side=LEFT)
-rightPosBtn.pack(side=LEFT)
-floorCheckBtn.pack(side=TOP)
-roundCheckBtn.pack(side=TOP)
-ceilCheckBtn.pack(side=TOP)
+
+inputOptionsRoundingFrame.pack(side=LEFT, fill="y")
+floorCheckBtn.pack(side=TOP, anchor=W)
+roundCheckBtn.pack(side=TOP, anchor=W)
+ceilCheckBtn.pack(side=TOP, anchor=W)
+
+inputOptionsMultiplierFrame.pack(side=LEFT, fill="y")
+leftPosBtn.pack(side=TOP, fill="x")
+centerPosBtn.pack(side=TOP, fill="x")
+rightPosBtn.pack(side=TOP, fill="x")
+
+
+
+
+
+
 
 
 ### OUTPUT FIELD ITEMS PACKING
