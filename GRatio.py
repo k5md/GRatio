@@ -135,6 +135,42 @@ def ProcessRightPos():
 root = Tk()
 
 
+### MENU
+
+menubar = Menu(root)
+
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Open text for analysis", command=LoadText, accelerator="Ctrl+O")
+filemenu.add_command(label="Save results", command=SaveResults, accelerator="Ctrl+S")
+filemenu.add_command(label="Import stoptokens", command=LoadStoptokens)
+filemenu.add_command(label="Export stoptokens", command=SaveStoptokens)
+filemenu.add_separator()
+filemenu.add_command(label="Exit", command=root.quit)
+menubar.add_cascade(label="File", menu=filemenu)
+
+editmenu = Menu(menubar, tearoff=0)
+editmenu.add_command(label="Get right position", command=ProcessRightPos, accelerator="Ctrl+T")
+editmenu.add_command(label="Get center position", command=ProcessCenterPos, accelerator="Ctrl+G")
+editmenu.add_command(label="Get left position", command=ProcessLeftPos, accelerator="Ctrl+B")
+
+menubar.add_cascade(label="Process", menu=editmenu)
+
+helpmenu = Menu(menubar, tearoff=0)
+helpmenu.add_command(label="About")
+menubar.add_cascade(label="Help", menu=helpmenu)
+
+root.config(menu=menubar)
+
+
+### SHORTCUT BINDINGS
+
+root.bind("<Control-o>", lambda x: LoadText())
+root.bind("<Control-s>", lambda x: SaveResults())
+root.bind("<Control-t>", lambda x: ProcessRightPos())
+root.bind("<Control-g>", lambda x: ProcessCenterPos())
+root.bind("<Control-b>", lambda x: ProcessLeftPos())
+
+
 ### FRAMES
 
 rootFrame = Frame(root)
@@ -142,7 +178,7 @@ inputFrame = LabelFrame(rootFrame, text="Input")
 outputFrame = LabelFrame(rootFrame, text="Output")
 inputOptionsFrame = Frame(inputFrame)
 outputOptionsFrame = Frame(outputFrame)
-inputOptionsMultiplierFrame = LabelFrame(inputOptionsFrame, text="Multiplier:")
+inputOptionsMultiplierFrame = LabelFrame(inputOptionsFrame, text="Get AP:")
 inputOptionsRoundingFrame = LabelFrame(inputOptionsFrame, text="Rounding type:")
 
 
@@ -201,10 +237,7 @@ roundCheckBtn.select()
 
 loadtextBtn.pack(side=TOP, fill="x")
 textBox.pack(side=TOP, fill="both", expand=True)
-
-
 inputOptionsFrame.pack()
-
 stoptextLabel.pack(side=LEFT)
 stoptextEntry.pack(side=LEFT)
 loadstoptextBtn.pack(side=LEFT)
@@ -221,13 +254,6 @@ inputOptionsMultiplierFrame.pack(side=LEFT, fill="y")
 leftPosBtn.pack(side=TOP, fill="x")
 centerPosBtn.pack(side=TOP, fill="x")
 rightPosBtn.pack(side=TOP, fill="x")
-
-
-
-
-
-
-
 
 ### OUTPUT FIELD ITEMS PACKING
 
