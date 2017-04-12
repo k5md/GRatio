@@ -174,12 +174,24 @@ root.bind("<Control-b>", lambda x: ProcessLeftPos())
 ### FRAMES
 
 rootFrame = Frame(root)
+
 inputFrame = LabelFrame(rootFrame, text="Input")
 outputFrame = LabelFrame(rootFrame, text="Output")
+
 inputOptionsFrame = Frame(inputFrame)
 outputOptionsFrame = Frame(outputFrame)
-inputOptionsMultiplierFrame = LabelFrame(inputOptionsFrame, text="Get AP:")
-inputOptionsRoundingFrame = LabelFrame(inputOptionsFrame, text="Rounding type:")
+
+inputOptionsSMFrame = Frame(inputOptionsFrame)
+inputOptionsStoptokensFrame = LabelFrame(inputOptionsSMFrame, text="Tokens to exclude")
+inputOptionsMultiplierFrame = LabelFrame(inputOptionsSMFrame, text="Multiplier")
+inputOptionsExecuteFrame = LabelFrame(inputOptionsFrame, text="Get AP")
+inputOptionsRoundingFrame = LabelFrame(inputOptionsFrame, text="Rounding type")
+
+outputOptionsFormatFrame = LabelFrame(outputOptionsFrame, text="Formatting options")
+outputOptionsFormatIndex = Frame(outputOptionsFormatFrame)
+outputOptionsFormatValue = Frame(outputOptionsFormatFrame)
+outputOptionsFormatToken = Frame(outputOptionsFormatFrame)
+outputOptionsFormatTotal = Frame(outputOptionsFormatFrame)
 
 
 ### FRAME PACKING
@@ -195,31 +207,24 @@ textBox = Text(inputFrame, font='Arial 14', wrap='word')
 resultBox = Text(outputFrame, font='Arial 14', wrap='word')
 
 
-### LABELS
-
-stoptextLabel = Label(inputOptionsFrame, text="Tokens to exclude:")
-multipliervalueLabel = Label(inputOptionsFrame, text="Multiplier:")
-
-
 ### ENTRIES & STRINGVARS DECLARATIONS
 
 stoptextEntryText = StringVar()
-stoptextEntry = Entry(inputOptionsFrame, font='Arial 14', textvariable=stoptextEntryText)
+stoptextEntry = Entry(inputOptionsStoptokensFrame, font='Arial 14', textvariable=stoptextEntryText)
 multipliervalueEntryText = StringVar(value="0.618")
-multipliervalueEntry = Entry(inputOptionsFrame, font='Arial 14', textvariable=multipliervalueEntryText)
+multipliervalueEntry = Entry(inputOptionsMultiplierFrame, font='Arial 14', textvariable=multipliervalueEntryText)
 
 
 ### BUTTONS
 
 loadtextBtn = Button(inputFrame, text = 'Open document', command = LoadText)
-loadstoptextBtn = Button(inputOptionsFrame, text = 'Open', command = LoadStoptokens)
-savestoptextBtn = Button(inputOptionsFrame, text = 'Save', command = SaveStoptokens)
+loadstoptextBtn = Button(inputOptionsStoptokensFrame, text = 'Open', command = LoadStoptokens)
+savestoptextBtn = Button(inputOptionsStoptokensFrame, text = 'Save', command = SaveStoptokens)
 saveresultsBtn = Button(outputFrame, text = 'Save results', command = SaveResults)
 
-
-leftPosBtn = Button(inputOptionsMultiplierFrame, text = '-0.236', command = lambda: ProcessLeftPos())
-centerPosBtn = Button(inputOptionsMultiplierFrame, text = 'Process', command = lambda: ProcessCenterPos())
-rightPosBtn = Button(inputOptionsMultiplierFrame, text = '+0.236', command = lambda: ProcessRightPos())
+leftPosBtn = Button(inputOptionsExecuteFrame, text = '-0.236', command = lambda: ProcessLeftPos())
+centerPosBtn = Button(inputOptionsExecuteFrame, text = 'Process', command = lambda: ProcessCenterPos())
+rightPosBtn = Button(inputOptionsExecuteFrame, text = '+0.236', command = lambda: ProcessRightPos())
 
 
 ### RADIOBUTTONS
@@ -233,16 +238,29 @@ ceilCheckBtn = Radiobutton(inputOptionsRoundingFrame, text="Ceil", value=CEIL, v
 roundCheckBtn.select()
 
 
+### CHECKBUTTONS
+
+#outputOptionsFormatIndex
+#outputOptionsFormatValue
+#outputOptionsFormatToken
+#outputOptionsFormatTotal
+
+
 ### INPUT FRAME ITEMS PACKING
 
 loadtextBtn.pack(side=TOP, fill="x")
 textBox.pack(side=TOP, fill="both", expand=True)
-inputOptionsFrame.pack()
-stoptextLabel.pack(side=LEFT)
+
+inputOptionsFrame.pack(side=LEFT)
+
+inputOptionsSMFrame.pack(side=LEFT)
+
+inputOptionsStoptokensFrame.pack(side=TOP, fill="x", expand=True)
 stoptextEntry.pack(side=LEFT)
 loadstoptextBtn.pack(side=LEFT)
 savestoptextBtn.pack(side=LEFT)
-multipliervalueLabel.pack(side=LEFT)
+
+inputOptionsMultiplierFrame.pack(side=TOP, fill="x")
 multipliervalueEntry.pack(side=LEFT)
 
 inputOptionsRoundingFrame.pack(side=LEFT, fill="y")
@@ -250,15 +268,20 @@ floorCheckBtn.pack(side=TOP, anchor=W)
 roundCheckBtn.pack(side=TOP, anchor=W)
 ceilCheckBtn.pack(side=TOP, anchor=W)
 
-inputOptionsMultiplierFrame.pack(side=LEFT, fill="y")
+inputOptionsExecuteFrame.pack(side=LEFT, fill="y")
 leftPosBtn.pack(side=TOP, fill="x")
 centerPosBtn.pack(side=TOP, fill="x")
 rightPosBtn.pack(side=TOP, fill="x")
 
-### OUTPUT FIELD ITEMS PACKING
+
+### OUTPUT FRAME ITEMS PACKING
 
 saveresultsBtn.pack(side=TOP, fill="x")
 resultBox.pack(side=TOP, fill="y", expand=True)
+
+outputOptionsFrame.pack(side=LEFT)
+
+outputOptionsFormatFrame.pack(side=LEFT)
 
 
 root.mainloop()
