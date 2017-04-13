@@ -92,24 +92,32 @@ def ProcessText(multiplier):
         else:
             raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
     
-        resultBox.insert(END, "{0} {1} {2}\n".format(tokens[harmonicCenter-1], harmonicCenterRaw, harmonicCenter))
-
+        resultBox.insert(END, FormatOutput(tokens[harmonicCenter-1], harmonicCenter-1, harmonicCenterRaw, harmonicCenter))
+        
+                                
     if len(allTokens) == 0:
         return
     
-    absHarmonicCenterRaw = len(allTokens) * multiplier
-    print("Absolute harmonic center(raw):", absHarmonicCenterRaw)
+    if includeTotal.get():
+    
+        absHarmonicCenterRaw = len(allTokens) * multiplier
+        print("Absolute harmonic center(raw):", absHarmonicCenterRaw)
 
-    absHarmonicCenter = absHarmonicCenterRaw
-    if hType.get() == FLOOR:
-        absHarmonicCenter = floor(absHarmonicCenter)
-    elif hType.get() == ROUND:
-        absHarmonicCenter = round(absHarmonicCenter)
-    elif hType.get() == CEIL:
-        absHarmonicCenter = ceil(absHarmonicCenter)
-    else:
-        raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
-    resultBox.insert(END, "\n{0} {1} {2}\n".format(allTokens[absHarmonicCenter-1], absHarmonicCenterRaw, absHarmonicCenter))
+        absHarmonicCenter = absHarmonicCenterRaw
+        if hType.get() == FLOOR:
+            absHarmonicCenter = floor(absHarmonicCenter)
+        elif hType.get() == ROUND:
+            absHarmonicCenter = round(absHarmonicCenter)
+        elif hType.get() == CEIL:
+            absHarmonicCenter = ceil(absHarmonicCenter)
+        else:
+            raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
+        resultBox.insert(END, "ABSOLUTE VALUE(FULL TEXT):\n")
+        resultBox.insert(END, FormatOutput(allTokens[absHarmonicCenter-1], absHarmonicCenter-1, absHarmonicCenterRaw, absHarmonicCenter))
+        
+
+        if includeSeparator.get():
+            resultBox.insert(END, "############\n")
 
 
 def GetMultiplier():
@@ -131,7 +139,17 @@ def ProcessLeftPos():
 def ProcessRightPos():
     ProcessText(GetMultiplier()+0.236)
 
-    
+
+def FormatOutput(token, index, valueRaw, value):
+    flags = [flag.get() for flag in [includeLPValue,
+                                    includeToken,
+                                    includeIndex]
+             ]
+
+    items = [str(item) for (item, mask) in zip([value, token, index],flags) if mask]
+    return "\t".join(items) + "\n"
+
+
 root = Tk()
 
 
@@ -240,10 +258,23 @@ roundCheckBtn.select()
 
 ### CHECKBUTTONS
 
-#outputOptionsFormatIndex
-#outputOptionsFormatValue
-#outputOptionsFormatToken
-#outputOptionsFormatTotal
+includeLPValue = IntVar()
+includeToken = IntVar()
+includeIndex = IntVar()
+includeTotal = IntVar()
+includeSeparator = IntVar()
+
+includeLPValueCheckBtn = Checkbutton(outputOptionsFormatValue, text="Local Position Value(sentence)", variable=includeLPValue, onvalue=1, offvalue=0)
+includeTokenCheckBtn = Checkbutton(outputOptionsFormatToken, text="Token", variable=includeToken, onvalue=1, offvalue=0)
+includeIndexCheckBtn = Checkbutton(outputOptionsFormatIndex, text="Index (with stoptokens excluded)", variable=includeIndex, onvalue=1, offvalue=0)
+includeTotalCheckBtn = Checkbutton(outputOptionsFormatTotal, text="Absolute Position Value(full text)", variable=includeTotal, onvalue=1, offvalue=0)
+includeSeparatorCheckBtn = Checkbutton(outputOptionsFormatTotal, text="Append separator after local results", variable=includeSeparator, onvalue=1, offvalue=0)
+
+includeLPValueCheckBtn.select()
+includeTokenCheckBtn.select()
+includeIndexCheckBtn.select()
+includeTotalCheckBtn.select()
+includeSeparatorCheckBtn.select()
 
 
 ### INPUT FRAME ITEMS PACKING
@@ -277,11 +308,24 @@ rightPosBtn.pack(side=TOP, fill="x")
 ### OUTPUT FRAME ITEMS PACKING
 
 saveresultsBtn.pack(side=TOP, fill="x")
-resultBox.pack(side=TOP, fill="y", expand=True)
+resultBox.pack(side=TOP, fill="both", expand=True)
 
-outputOptionsFrame.pack(side=LEFT)
+outputOptionsFrame.pack(side=LEFT, fill="both", expand=True)
 
-outputOptionsFormatFrame.pack(side=LEFT)
+outputOptionsFormatFrame.pack(side=LEFT, fill="both", expand=True)
+
+outputOptionsFormatIndex.pack(side=LEFT)
+includeIndexCheckBtn.pack(side=LEFT)
+
+outputOptionsFormatValue.pack(side=LEFT)
+includeLPValueCheckBtn.pack(side=LEFT)
+
+outputOptionsFormatToken.pack(side=LEFT)
+includeTokenCheckBtn.pack(side=LEFT)
+
+outputOptionsFormatTotal.pack(side=LEFT, fill="both", expand=True)
+includeTotalCheckBtn.pack(side=TOP, anchor=W)
+includeSeparatorCheckBtn.pack(side=TOP, anchor=W)
 
 
 root.mainloop()
