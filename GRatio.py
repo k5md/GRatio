@@ -92,7 +92,7 @@ def ProcessText(multiplier):
         else:
             raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
     
-        resultBox.insert(END, FormatOutput(tokens[harmonicCenter-1], harmonicCenter-1, harmonicCenterRaw, harmonicCenter))
+        resultBox.insert(END, FormatOutput(s, tokens[harmonicCenter-1], harmonicCenter-1, harmonicCenterRaw, harmonicCenter))
         
                                 
     if len(allTokens) == 0:
@@ -113,7 +113,7 @@ def ProcessText(multiplier):
         else:
             raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
         resultBox.insert(END, "ABSOLUTE VALUE(FULL TEXT):\n")
-        resultBox.insert(END, FormatOutput(allTokens[absHarmonicCenter-1], absHarmonicCenter-1, absHarmonicCenterRaw, absHarmonicCenter))
+        resultBox.insert(END, FormatOutput("", allTokens[absHarmonicCenter-1], absHarmonicCenter-1, absHarmonicCenterRaw, absHarmonicCenter))
         
 
         if includeSeparator.get():
@@ -140,13 +140,14 @@ def ProcessRightPos():
     ProcessText(GetMultiplier()+0.236)
 
 
-def FormatOutput(token, index, valueRaw, value):
-    flags = [flag.get() for flag in [includeLPValue,
-                                    includeToken,
-                                    includeIndex]
+def FormatOutput(sentence, token, index, valueRaw, value):
+    flags = [flag.get() for flag in [includeSentence,
+                                     includeLPValue,
+                                     includeToken,
+                                     includeIndex]
              ]
 
-    items = [str(item) for (item, mask) in zip([value, token, index],flags) if mask]
+    items = [str(item) for (item, mask) in zip([sentence, value, token, index],flags) if mask]
     return "\t".join(items) + "\n"
 
 
@@ -259,6 +260,7 @@ roundCheckBtn.select()
 ### CHECKBUTTONS
 
 includeLPValue = IntVar()
+includeSentence = IntVar()
 includeToken = IntVar()
 includeIndex = IntVar()
 includeTotal = IntVar()
@@ -266,6 +268,7 @@ includeSeparator = IntVar()
 
 includeLPValueCheckBtn = Checkbutton(outputOptionsFormatValue, text="Local Position Value(sentence)", variable=includeLPValue, onvalue=1, offvalue=0)
 includeTokenCheckBtn = Checkbutton(outputOptionsFormatToken, text="Token", variable=includeToken, onvalue=1, offvalue=0)
+includeSentenceCheckBtn = Checkbutton(outputOptionsFormatToken, text="Sentence", variable=includeSentence, onvalue=1, offvalue=0)
 includeIndexCheckBtn = Checkbutton(outputOptionsFormatIndex, text="Index (with stoptokens excluded)", variable=includeIndex, onvalue=1, offvalue=0)
 includeTotalCheckBtn = Checkbutton(outputOptionsFormatTotal, text="Absolute Position Value(full text)", variable=includeTotal, onvalue=1, offvalue=0)
 includeSeparatorCheckBtn = Checkbutton(outputOptionsFormatTotal, text="Append separator after local results", variable=includeSeparator, onvalue=1, offvalue=0)
@@ -321,7 +324,8 @@ outputOptionsFormatValue.pack(side=LEFT)
 includeLPValueCheckBtn.pack(side=LEFT)
 
 outputOptionsFormatToken.pack(side=LEFT)
-includeTokenCheckBtn.pack(side=LEFT)
+includeTokenCheckBtn.pack(side=TOP, anchor=W)
+includeSentenceCheckBtn.pack(side=TOP, anchor=W)
 
 outputOptionsFormatTotal.pack(side=LEFT, fill="both", expand=True)
 includeTotalCheckBtn.pack(side=TOP, anchor=W)
