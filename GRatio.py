@@ -49,9 +49,15 @@ def SaveStoptokens():
 def ProcessText(multiplier):
     global hType
     inputText = textBox.get('1.0', 'end')
-    stopTokens = stoptextEntryText.get()
+
+    stopTokens = ""
+
+    if useStoptokensValue.get():
+        stopTokens = stoptextEntryText.get()
+    
 
     sentenses = re.split("\n+|\.+|\?+|!+", inputText)
+
     stopTokens = re.split(",", stopTokens)
     stopTokens = [i.strip() for i in stopTokens]
     if '' in stopTokens:
@@ -153,6 +159,10 @@ def FormatOutput(sentence, token, index, valueRaw, value):
 
 root = Tk()
 
+root.minsize(1280,800)
+
+root.title("GRatio")
+
 
 ### MENU
 
@@ -207,17 +217,13 @@ inputOptionsExecuteFrame = LabelFrame(inputOptionsFrame, text="Get AP")
 inputOptionsRoundingFrame = LabelFrame(inputOptionsFrame, text="Rounding type")
 
 outputOptionsFormatFrame = LabelFrame(outputOptionsFrame, text="Formatting options")
-outputOptionsFormatIndex = Frame(outputOptionsFormatFrame)
-outputOptionsFormatValue = Frame(outputOptionsFormatFrame)
-outputOptionsFormatToken = Frame(outputOptionsFormatFrame)
-outputOptionsFormatTotal = Frame(outputOptionsFormatFrame)
 
 
 ### FRAME PACKING
 
-rootFrame.pack(fill=BOTH, expand=True)
-inputFrame.pack(side=LEFT, fill="y")
-outputFrame.pack(side=LEFT, fill="y")
+rootFrame.grid(row=0, column=0, sticky="wens")
+inputFrame.grid(row=0, column=0, sticky="wens")
+outputFrame.grid(row=0, column=1, sticky="wens")
 
 
 ### TEXTS
@@ -250,14 +256,16 @@ rightPosBtn = Button(inputOptionsExecuteFrame, text = '+0.236', command = lambda
 
 hType = IntVar()
 
-floorCheckBtn = Radiobutton(inputOptionsRoundingFrame, text="Floor", value=FLOOR, variable=hType)
-roundCheckBtn = Radiobutton(inputOptionsRoundingFrame, text="Round", value=ROUND, variable=hType)
-ceilCheckBtn = Radiobutton(inputOptionsRoundingFrame, text="Ceil", value=CEIL, variable=hType)
+floorRadioBtn = Radiobutton(inputOptionsRoundingFrame, text="Floor", value=FLOOR, variable=hType)
+roundRadioBtn = Radiobutton(inputOptionsRoundingFrame, text="Round", value=ROUND, variable=hType)
+ceilRadioBtn = Radiobutton(inputOptionsRoundingFrame, text="Ceil", value=CEIL, variable=hType)
 
-roundCheckBtn.select()
+roundRadioBtn.select()
 
 
 ### CHECKBUTTONS
+
+useStoptokensValue = IntVar()
 
 includeLPValue = IntVar()
 includeSentence = IntVar()
@@ -266,12 +274,16 @@ includeIndex = IntVar()
 includeTotal = IntVar()
 includeSeparator = IntVar()
 
-includeLPValueCheckBtn = Checkbutton(outputOptionsFormatValue, text="Local Position Value(sentence)", variable=includeLPValue, onvalue=1, offvalue=0)
-includeTokenCheckBtn = Checkbutton(outputOptionsFormatToken, text="Token", variable=includeToken, onvalue=1, offvalue=0)
-includeSentenceCheckBtn = Checkbutton(outputOptionsFormatToken, text="Sentence", variable=includeSentence, onvalue=1, offvalue=0)
-includeIndexCheckBtn = Checkbutton(outputOptionsFormatIndex, text="Index (with stoptokens excluded)", variable=includeIndex, onvalue=1, offvalue=0)
-includeTotalCheckBtn = Checkbutton(outputOptionsFormatTotal, text="Absolute Position Value(full text)", variable=includeTotal, onvalue=1, offvalue=0)
-includeSeparatorCheckBtn = Checkbutton(outputOptionsFormatTotal, text="Append separator after local results", variable=includeSeparator, onvalue=1, offvalue=0)
+useStoptokensCheckBtn = Checkbutton(inputOptionsStoptokensFrame, text="Use stoptokens", variable=useStoptokensValue, onvalue=1, offvalue=0)
+
+includeLPValueCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Local Position Value(sentence)", variable=includeLPValue, onvalue=1, offvalue=0)
+includeTokenCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Token", variable=includeToken, onvalue=1, offvalue=0)
+includeSentenceCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Sentence", variable=includeSentence, onvalue=1, offvalue=0)
+includeIndexCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Index (with stoptokens excluded)", variable=includeIndex, onvalue=1, offvalue=0)
+includeTotalCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Absolute Position Value(full text)", variable=includeTotal, onvalue=1, offvalue=0)
+includeSeparatorCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Append separator after local results", variable=includeSeparator, onvalue=1, offvalue=0)
+
+useStoptokensCheckBtn.select()
 
 includeLPValueCheckBtn.select()
 includeTokenCheckBtn.select()
@@ -282,10 +294,10 @@ includeSeparatorCheckBtn.select()
 
 ### INPUT FRAME ITEMS PACKING
 
-loadtextBtn.pack(side=TOP, fill="x")
-textBox.pack(side=TOP, fill="both", expand=True)
+loadtextBtn.grid(row=0, column=0, sticky="wens")
+textBox.grid(row=1, column=0, sticky="wens")
 
-inputOptionsFrame.pack(side=LEFT)
+inputOptionsFrame.grid(row=2, column=0, sticky="wens")
 
 inputOptionsSMFrame.pack(side=LEFT)
 
@@ -296,11 +308,12 @@ savestoptextBtn.pack(side=LEFT)
 
 inputOptionsMultiplierFrame.pack(side=TOP, fill="x")
 multipliervalueEntry.pack(side=LEFT)
+useStoptokensCheckBtn.pack(side=LEFT)
 
 inputOptionsRoundingFrame.pack(side=LEFT, fill="y")
-floorCheckBtn.pack(side=TOP, anchor=W)
-roundCheckBtn.pack(side=TOP, anchor=W)
-ceilCheckBtn.pack(side=TOP, anchor=W)
+floorRadioBtn.pack(side=TOP, anchor=W)
+roundRadioBtn.pack(side=TOP, anchor=W)
+ceilRadioBtn.pack(side=TOP, anchor=W)
 
 inputOptionsExecuteFrame.pack(side=LEFT, fill="y")
 leftPosBtn.pack(side=TOP, fill="x")
@@ -310,27 +323,43 @@ rightPosBtn.pack(side=TOP, fill="x")
 
 ### OUTPUT FRAME ITEMS PACKING
 
-saveresultsBtn.pack(side=TOP, fill="x")
-resultBox.pack(side=TOP, fill="both", expand=True)
+saveresultsBtn.grid(row=0, column=0, sticky="wens")
+resultBox.grid(row=1, column=0, sticky="wens")
 
-outputOptionsFrame.pack(side=LEFT, fill="both", expand=True)
+outputOptionsFrame.grid(row=2, column=0, sticky="wens")
 
 outputOptionsFormatFrame.pack(side=LEFT, fill="both", expand=True)
 
-outputOptionsFormatIndex.pack(side=LEFT)
-includeIndexCheckBtn.pack(side=LEFT)
+includeIndexCheckBtn.grid(row = 0, column = 0, sticky="w")
+includeLPValueCheckBtn.grid(row = 1, column = 0, sticky="w")
+includeTokenCheckBtn.grid(row = 0, column = 1, sticky="w")
+includeSentenceCheckBtn.grid(row = 1, column = 1, sticky="w")
+includeTotalCheckBtn.grid(row = 0, column = 2, sticky="w")
+includeSeparatorCheckBtn.grid(row = 1, column = 2, sticky="w")
 
-outputOptionsFormatValue.pack(side=LEFT)
-includeLPValueCheckBtn.pack(side=LEFT)
 
-outputOptionsFormatToken.pack(side=LEFT)
-includeTokenCheckBtn.pack(side=TOP, anchor=W)
-includeSentenceCheckBtn.pack(side=TOP, anchor=W)
+### GRID ITEMS CONFIGURATING
 
-outputOptionsFormatTotal.pack(side=LEFT, fill="both", expand=True)
-includeTotalCheckBtn.pack(side=TOP, anchor=W)
-includeSeparatorCheckBtn.pack(side=TOP, anchor=W)
+Grid.rowconfigure(root, 0, weight=1)
+Grid.columnconfigure(root, 0, weight=1)
 
+Grid.rowconfigure(rootFrame, 0, weight=1)
+Grid.columnconfigure(rootFrame, 0, weight=1)
+Grid.columnconfigure(rootFrame, 1, weight=1)
+
+Grid.rowconfigure(inputFrame, 1, weight=1)
+
+Grid.columnconfigure(inputFrame, 0, weight=1)
+Grid.columnconfigure(inputFrame, 1, weight=1)
+Grid.columnconfigure(inputFrame, 2, weight=1)
+
+Grid.rowconfigure(outputFrame, 1, weight=1)
+
+Grid.columnconfigure(outputFrame, 0, weight=1)
+Grid.columnconfigure(outputFrame, 1, weight=1)
+Grid.columnconfigure(outputFrame, 2, weight=1)
+
+Grid.rowconfigure(inputFrame, 2, minsize=100)
+Grid.rowconfigure(outputFrame, 2, minsize=100)
 
 root.mainloop()
-
