@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import filedialog as tkFileDialog
 from math import floor, ceil
 import re
+from tkinter.scrolledtext import ScrolledText
 
 
 FLOOR = 1
@@ -228,16 +229,16 @@ outputFrame.grid(row=0, column=1, sticky="wens")
 
 ### TEXTS
 
-textBox = Text(inputFrame, font='Arial 14', wrap='word')
-resultBox = Text(outputFrame, font='Arial 14', wrap='word')
+textBox = ScrolledText(inputFrame, font='Verdana 12', wrap='word')
+resultBox = ScrolledText(outputFrame, font='Verdana 12', wrap='word')
 
 
 ### ENTRIES & STRINGVARS DECLARATIONS
 
 stoptextEntryText = StringVar()
-stoptextEntry = Entry(inputOptionsStoptokensFrame, font='Arial 14', textvariable=stoptextEntryText)
+stoptextEntry = Entry(inputOptionsStoptokensFrame, font='Verdana 14', textvariable=stoptextEntryText)
 multipliervalueEntryText = StringVar(value="0.618")
-multipliervalueEntry = Entry(inputOptionsMultiplierFrame, font='Arial 14', textvariable=multipliervalueEntryText)
+multipliervalueEntry = Entry(inputOptionsMultiplierFrame, font='Verdana 14', textvariable=multipliervalueEntryText)
 
 
 ### BUTTONS
