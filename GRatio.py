@@ -56,14 +56,12 @@ def ProcessText(multiplier):
     if useStoptokensValue.get():
         stopTokens = stoptextEntryText.get()
     
-
     sentenses = re.split("\n+|\.+|\?+|!+", inputText)
 
     stopTokens = re.split(",", stopTokens)
     stopTokens = [i.strip() for i in stopTokens]
     if '' in stopTokens:
         stopTokens.remove('')
-    print(len(stopTokens))
     
     print("Stop tokens: ", stopTokens)
     print("Multiplier: ", multiplier)
@@ -84,7 +82,7 @@ def ProcessText(multiplier):
         
         print("Sentense: ", s, "\nTokens: ", tokens, " Length: ", len(tokens))
 
-        harmonicCenterRaw = len(tokens) * multiplier
+        harmonicCenterRaw = (len(tokens) - 1) * multiplier
         
         print("Local harmonic center(raw):", harmonicCenterRaw)
         
@@ -99,7 +97,7 @@ def ProcessText(multiplier):
         else:
             raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
     
-        resultBox.insert(END, FormatOutput(s, tokens[harmonicCenter-1], harmonicCenter-1, harmonicCenterRaw, harmonicCenter))
+        resultBox.insert(END, FormatOutput(s, tokens[harmonicCenter], harmonicCenter, harmonicCenterRaw, harmonicCenter))
         
                                 
     if len(allTokens) == 0:
@@ -107,7 +105,7 @@ def ProcessText(multiplier):
     
     if includeTotal.get():
     
-        absHarmonicCenterRaw = len(allTokens) * multiplier
+        absHarmonicCenterRaw = (len(allTokens) - 1) * multiplier
         print("Absolute harmonic center(raw):", absHarmonicCenterRaw)
 
         absHarmonicCenter = absHarmonicCenterRaw
@@ -120,7 +118,7 @@ def ProcessText(multiplier):
         else:
             raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
         resultBox.insert(END, "ABSOLUTE VALUE(FULL TEXT):\n")
-        resultBox.insert(END, FormatOutput("", allTokens[absHarmonicCenter-1], absHarmonicCenter-1, absHarmonicCenterRaw, absHarmonicCenter))
+        resultBox.insert(END, FormatOutput("", allTokens[absHarmonicCenter], absHarmonicCenter, absHarmonicCenterRaw, absHarmonicCenter))
         
 
         if includeSeparator.get():
@@ -135,18 +133,34 @@ def GetMultiplier():
         raise ValueError("multiplier value is not a float")
     
 
-def ProcessCenterPos():
-    ProcessText(GetMultiplier())
+def ProcessZeroPos():
+    ProcessText(0)
+    
+
+def ProcessIntroPos():
+    ProcessText(0.146)
+
+
+def ProcessHCIntroPos():
+    ProcessText(0.236)
     
 
 def ProcessLeftPos():
     ProcessText(GetMultiplier()-0.236)
 
 
+def ProcessCenterPos():
+    ProcessText(GetMultiplier())
+
+    
 def ProcessRightPos():
     ProcessText(GetMultiplier()+0.236)
 
 
+def ProcessEndPos():
+    ProcessText(1)
+
+    
 def FormatOutput(sentence, token, index, valueRaw, value):
     flags = [flag.get() for flag in [includeSentence,
                                      includeLPValue,
@@ -248,10 +262,14 @@ loadstoptextBtn = Button(inputOptionsStoptokensFrame, text = 'Open', command = L
 savestoptextBtn = Button(inputOptionsStoptokensFrame, text = 'Save', command = SaveStoptokens)
 saveresultsBtn = Button(outputFrame, text = 'Save results', command = SaveResults)
 
-leftPosBtn = Button(inputOptionsExecuteFrame, text = '-0.236', command = lambda: ProcessLeftPos())
-centerPosBtn = Button(inputOptionsExecuteFrame, text = 'Process', command = lambda: ProcessCenterPos())
-rightPosBtn = Button(inputOptionsExecuteFrame, text = '+0.236', command = lambda: ProcessRightPos())
 
+zeroPosBtn = Button(inputOptionsExecuteFrame, text = '0', command = lambda: ProcessZeroPos())
+introPosBtn = Button(inputOptionsExecuteFrame, text = '0.146', command = lambda: ProcessIntroPos())
+hCIntroPosBtn = Button(inputOptionsExecuteFrame, text = '0.236', command = lambda: ProcessHCIntroPos())
+leftPosBtn = Button(inputOptionsExecuteFrame, text = 'C-0.236', command = lambda: ProcessLeftPos())
+centerPosBtn = Button(inputOptionsExecuteFrame, text = 'Center', command = lambda: ProcessCenterPos())
+rightPosBtn = Button(inputOptionsExecuteFrame, text = 'C+0.236', command = lambda: ProcessRightPos())
+endPosBtn = Button(inputOptionsExecuteFrame, text = '1', command = lambda: ProcessEndPos())
 
 ### RADIOBUTTONS
 
@@ -317,9 +335,13 @@ roundRadioBtn.pack(side=TOP, anchor=W)
 ceilRadioBtn.pack(side=TOP, anchor=W)
 
 inputOptionsExecuteFrame.pack(side=LEFT, fill="y")
-leftPosBtn.pack(side=TOP, fill="x")
-centerPosBtn.pack(side=TOP, fill="x")
-rightPosBtn.pack(side=TOP, fill="x")
+zeroPosBtn.pack(side=LEFT, fill="x")
+introPosBtn.pack(side=LEFT, fill="x")
+hCIntroPosBtn.pack(side=LEFT, fill="x")
+leftPosBtn.pack(side=LEFT, fill="x")
+centerPosBtn.pack(side=LEFT, fill="x")
+rightPosBtn.pack(side=LEFT, fill="x")
+endPosBtn.pack(side=LEFT, fill="x")
 
 
 ### OUTPUT FRAME ITEMS PACKING
