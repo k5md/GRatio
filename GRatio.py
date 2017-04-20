@@ -134,30 +134,37 @@ def GetMultiplier():
     
 
 def ProcessZeroPos():
+    resultBox.insert(END, "Абсолютное начало:\n")
     ProcessText(0)
     
 
 def ProcessIntroPos():
+    resultBox.insert(END, "Зачин:\n")
     ProcessText(0.146)
 
 
 def ProcessHCIntroPos():
+    resultBox.insert(END, "Гармонический центр зоны начала:\n")
     ProcessText(0.236)
     
 
 def ProcessLeftPos():
+    resultBox.insert(END, "АСП1:\n")
     ProcessText(GetMultiplier()-0.236)
 
 
 def ProcessCenterPos():
+    resultBox.insert(END, "Гармонический центр:\n")
     ProcessText(GetMultiplier())
 
     
 def ProcessRightPos():
+    resultBox.insert(END, "АСП2:\n")
     ProcessText(GetMultiplier()+0.236)
 
 
 def ProcessEndPos():
+    resultBox.insert(END, "Абсолютный конец:\n")
     ProcessText(1)
 
     
