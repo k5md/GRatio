@@ -11,6 +11,42 @@ FLOOR = 1
 ROUND = 2
 CEIL = 3
 
+RUSSIAN = {"d_open_text" : "Открыть текст для анализа",
+           "d_save_results" : "Сохранить результаты",
+           "d_import_stoptokens" : "Импорт токенов-исключений",
+           "d_save_stoptokens" : "Экспорт токенов-исключений",
+           "d_process": "Обработать",
+           "d_get_right": "АСП2",
+           "d_get_center": "Гармонический центр",
+           "d_get_right": "АСП1",
+           "d_help" : "Помощь",
+           "d_about": "О программе",
+           "d_input": "Исходные данные:",
+           "d_tokens_to_exclude": "Токены-исключения",
+           "d_open": "Открыть",
+           "d_save": "Сохранить",
+           "d_use_stoptokens": "Использовать исключения",
+           "d_multiplier": "Множитель",
+           "d_rounding_type": "Тип округления",
+           "d_floor": "К меньшему",
+           "d_ceil": "К большему",
+           "d_round": "К ближайшему",
+           "d_get_ap": "Обработать",
+           "d_center": "Центр",
+           "d_output": "Результаты",
+           "d_formatting_options": "Настройки вывода",
+           "d_index": "Позиция (в тексте БЕЗ токенов-исключений)",
+           "d_local_position_value": "Выводить значение позиции(предложение)",
+           "d_token": "Токен",
+           "d_sentence": "Предложение",
+           "d_absolute_position_value": "Выводить значение позиции(текст)",
+           "d_append_separator": "Добавить разделитель"
+           }
+           
+ENGLISH = {}
+
+LOCAL = RUSSIAN
+
 
 def SaveResults():
     fn = tkFileDialog.SaveAs(root, filetypes = [('*.txt files', '.txt')]).show()
@@ -191,7 +227,7 @@ root.title("GRatio")
 menubar = Menu(root)
 
 filemenu = Menu(menubar, tearoff=0)
-filemenu.add_command(label="Open text for analysis", command=LoadText, accelerator="Ctrl+O")
+filemenu.add_command(label=LOCAL["d_open_text"], command=LoadText, accelerator="Ctrl+O")
 filemenu.add_command(label="Save results", command=SaveResults, accelerator="Ctrl+S")
 filemenu.add_command(label="Import stoptokens", command=LoadStoptokens)
 filemenu.add_command(label="Export stoptokens", command=SaveStoptokens)
