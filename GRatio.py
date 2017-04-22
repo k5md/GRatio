@@ -11,39 +11,41 @@ FLOOR = 1
 ROUND = 2
 CEIL = 3
 
-RUSSIAN = {"d_open_text" : "Открыть текст для анализа",
-           "d_save_results" : "Сохранить результаты",
-           "d_import_stoptokens" : "Импорт токенов-исключений",
-           "d_save_stoptokens" : "Экспорт токенов-исключений",
-           "d_process": "Обработать",
-           "d_get_right": "АСП2",
-           "d_get_center": "Гармонический центр",
-           "d_get_right": "АСП1",
-           "d_help" : "Помощь",
-           "d_about": "О программе",
-           "d_input": "Исходные данные:",
-           "d_tokens_to_exclude": "Токены-исключения",
-           "d_open": "Открыть",
-           "d_save": "Сохранить",
-           "d_use_stoptokens": "Использовать исключения",
-           "d_multiplier": "Множитель",
-           "d_rounding_type": "Тип округления",
-           "d_floor": "К меньшему",
-           "d_ceil": "К большему",
-           "d_round": "К ближайшему",
-           "d_get_ap": "Обработать",
-           "d_center": "Центр",
-           "d_output": "Результаты",
-           "d_formatting_options": "Настройки вывода",
-           "d_index": "Позиция (в тексте БЕЗ токенов-исключений)",
-           "d_local_position_value": "Выводить значение позиции(предложение)",
-           "d_token": "Токен",
-           "d_sentence": "Предложение",
-           "d_absolute_position_value": "Выводить значение позиции(текст)",
-           "d_append_separator": "Добавить разделитель"
-           }
-           
-ENGLISH = {}
+RUSSIAN = {
+    "d_open_text" : "Открыть текст для анализа",
+    "d_save_results" : "Сохранить результаты",
+    "d_import_stoptokens" : "Импорт токенов-исключений",
+    "d_save_stoptokens" : "Экспорт токенов-исключений",
+    "d_exit": "Выйти",
+    "d_file": "Файл",
+    "d_process": "Обработать",
+    "d_get_left": "АСП2",
+    "d_get_center": "Гармонический центр",
+    "d_get_right": "АСП1",
+    "d_help" : "Помощь",
+    "d_about": "О программе",
+    "d_input": "Исходные данные:",
+    "d_tokens_to_exclude": "Токены-исключения",
+    "d_open": "Открыть",
+    "d_save": "Сохранить",
+    "d_use_stoptokens": "Использовать исключения",
+    "d_multiplier": "Множитель",
+    "d_rounding_type": "Тип округления",
+    "d_floor": "К меньшему",
+    "d_ceil": "К большему",
+    "d_round": "К ближайшему",
+    "d_get_ap": "Обработать",
+    "d_center": "Центр",
+    "d_center_abbr": "Ц",
+    "d_output": "Результаты",
+    "d_formatting_options": "Настройки вывода",
+    "d_index": "Позиция (в тексте БЕЗ токенов-исключений)",
+    "d_local_position_value": "Выводить значение позиции(предложение)",
+    "d_token": "Токен",
+    "d_sentence": "Предложение",
+    "d_absolute_position_value": "Выводить значение позиции(текст)",
+    "d_append_separator": "Добавить разделитель",
+}
 
 LOCAL = RUSSIAN
 
@@ -116,7 +118,7 @@ def ProcessText(multiplier):
 
         allTokens += tokens
         
-        print("Sentense: ", s, "\nTokens: ", tokens, " Length: ", len(tokens))
+        print("Sentence: ", s, "\nTokens: ", tokens, " Length: ", len(tokens))
 
         harmonicCenterRaw = (len(tokens) - 1) * multiplier
         
@@ -228,23 +230,23 @@ menubar = Menu(root)
 
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label=LOCAL["d_open_text"], command=LoadText, accelerator="Ctrl+O")
-filemenu.add_command(label="Save results", command=SaveResults, accelerator="Ctrl+S")
-filemenu.add_command(label="Import stoptokens", command=LoadStoptokens)
-filemenu.add_command(label="Export stoptokens", command=SaveStoptokens)
+filemenu.add_command(label=LOCAL["d_save_results"], command=SaveResults, accelerator="Ctrl+S")
+filemenu.add_command(label=LOCAL["d_import_stoptokens"], command=LoadStoptokens)
+filemenu.add_command(label=LOCAL["d_save_stoptokens"], command=SaveStoptokens)
 filemenu.add_separator()
-filemenu.add_command(label="Exit", command=root.quit)
-menubar.add_cascade(label="File", menu=filemenu)
+filemenu.add_command(label=LOCAL["d_exit"], command=root.quit)
+menubar.add_cascade(label=LOCAL["d_file"], menu=filemenu)
 
 editmenu = Menu(menubar, tearoff=0)
-editmenu.add_command(label="Get right position", command=ProcessRightPos, accelerator="Ctrl+T")
-editmenu.add_command(label="Get center position", command=ProcessCenterPos, accelerator="Ctrl+G")
-editmenu.add_command(label="Get left position", command=ProcessLeftPos, accelerator="Ctrl+B")
+editmenu.add_command(label=LOCAL["d_get_right"], command=ProcessRightPos, accelerator="Ctrl+T")
+editmenu.add_command(label=LOCAL["d_get_center"], command=ProcessCenterPos, accelerator="Ctrl+G")
+editmenu.add_command(label=LOCAL["d_get_left"], command=ProcessLeftPos, accelerator="Ctrl+B")
 
-menubar.add_cascade(label="Process", menu=editmenu)
+menubar.add_cascade(label=LOCAL["d_process"], menu=editmenu)
 
 helpmenu = Menu(menubar, tearoff=0)
-helpmenu.add_command(label="About")
-menubar.add_cascade(label="Help", menu=helpmenu)
+helpmenu.add_command(label=LOCAL["d_about"])
+menubar.add_cascade(label=LOCAL["d_help"], menu=helpmenu)
 
 root.config(menu=menubar)
 
@@ -262,19 +264,19 @@ root.bind("<Control-b>", lambda x: ProcessLeftPos())
 
 rootFrame = Frame(root)
 
-inputFrame = LabelFrame(rootFrame, text="Input")
-outputFrame = LabelFrame(rootFrame, text="Output")
+inputFrame = LabelFrame(rootFrame, text=LOCAL["d_input"])
+outputFrame = LabelFrame(rootFrame, text=LOCAL["d_output"])
 
 inputOptionsFrame = Frame(inputFrame)
 outputOptionsFrame = Frame(outputFrame)
 
 inputOptionsSMFrame = Frame(inputOptionsFrame)
-inputOptionsStoptokensFrame = LabelFrame(inputOptionsSMFrame, text="Tokens to exclude")
-inputOptionsMultiplierFrame = LabelFrame(inputOptionsSMFrame, text="Multiplier")
-inputOptionsExecuteFrame = LabelFrame(inputOptionsFrame, text="Get AP")
-inputOptionsRoundingFrame = LabelFrame(inputOptionsFrame, text="Rounding type")
+inputOptionsStoptokensFrame = LabelFrame(inputOptionsSMFrame, text=LOCAL["d_tokens_to_exclude"])
+inputOptionsMultiplierFrame = LabelFrame(inputOptionsSMFrame, text=LOCAL["d_multiplier"])
+inputOptionsExecuteFrame = LabelFrame(inputOptionsFrame, text=LOCAL["d_get_ap"])
+inputOptionsRoundingFrame = LabelFrame(inputOptionsFrame, text=LOCAL["d_rounding_type"])
 
-outputOptionsFormatFrame = LabelFrame(outputOptionsFrame, text="Formatting options")
+outputOptionsFormatFrame = LabelFrame(outputOptionsFrame, text=LOCAL["d_formatting_options"])
 
 
 ### FRAME PACKING
@@ -300,27 +302,27 @@ multipliervalueEntry = Entry(inputOptionsMultiplierFrame, font='Verdana 14', tex
 
 ### BUTTONS
 
-loadtextBtn = Button(inputFrame, text = 'Open document', command = LoadText)
-loadstoptextBtn = Button(inputOptionsStoptokensFrame, text = 'Open', command = LoadStoptokens)
-savestoptextBtn = Button(inputOptionsStoptokensFrame, text = 'Save', command = SaveStoptokens)
-saveresultsBtn = Button(outputFrame, text = 'Save results', command = SaveResults)
+loadtextBtn = Button(inputFrame, text = LOCAL["d_open_text"], command = LoadText)
+loadstoptextBtn = Button(inputOptionsStoptokensFrame, text = LOCAL["d_import_stoptokens"], command = LoadStoptokens)
+savestoptextBtn = Button(inputOptionsStoptokensFrame, text = LOCAL["d_save_stoptokens"], command = SaveStoptokens)
+saveresultsBtn = Button(outputFrame, text = LOCAL["d_save_results"], command = SaveResults)
 
 
 zeroPosBtn = Button(inputOptionsExecuteFrame, text = '0', command = lambda: ProcessZeroPos())
 introPosBtn = Button(inputOptionsExecuteFrame, text = '0.146', command = lambda: ProcessIntroPos())
 hCIntroPosBtn = Button(inputOptionsExecuteFrame, text = '0.236', command = lambda: ProcessHCIntroPos())
-leftPosBtn = Button(inputOptionsExecuteFrame, text = 'C-0.236', command = lambda: ProcessLeftPos())
-centerPosBtn = Button(inputOptionsExecuteFrame, text = 'Center', command = lambda: ProcessCenterPos())
-rightPosBtn = Button(inputOptionsExecuteFrame, text = 'C+0.236', command = lambda: ProcessRightPos())
+leftPosBtn = Button(inputOptionsExecuteFrame, text = '{}-0.236'.format(LOCAL["d_center_abbr"]), command = lambda: ProcessLeftPos())
+centerPosBtn = Button(inputOptionsExecuteFrame, text = LOCAL["d_center"], command = lambda: ProcessCenterPos())
+rightPosBtn = Button(inputOptionsExecuteFrame, text = '{}+0.236'.format(LOCAL["d_center_abbr"]), command = lambda: ProcessRightPos())
 endPosBtn = Button(inputOptionsExecuteFrame, text = '1', command = lambda: ProcessEndPos())
 
 ### RADIOBUTTONS
 
 hType = IntVar()
 
-floorRadioBtn = Radiobutton(inputOptionsRoundingFrame, text="Floor", value=FLOOR, variable=hType)
-roundRadioBtn = Radiobutton(inputOptionsRoundingFrame, text="Round", value=ROUND, variable=hType)
-ceilRadioBtn = Radiobutton(inputOptionsRoundingFrame, text="Ceil", value=CEIL, variable=hType)
+floorRadioBtn = Radiobutton(inputOptionsRoundingFrame, text=LOCAL["d_floor"], value=FLOOR, variable=hType)
+roundRadioBtn = Radiobutton(inputOptionsRoundingFrame, text=LOCAL["d_round"], value=ROUND, variable=hType)
+ceilRadioBtn = Radiobutton(inputOptionsRoundingFrame, text=LOCAL["d_ceil"], value=CEIL, variable=hType)
 
 roundRadioBtn.select()
 
@@ -336,14 +338,14 @@ includeIndex = IntVar()
 includeTotal = IntVar()
 includeSeparator = IntVar()
 
-useStoptokensCheckBtn = Checkbutton(inputOptionsStoptokensFrame, text="Use stoptokens", variable=useStoptokensValue, onvalue=1, offvalue=0)
+useStoptokensCheckBtn = Checkbutton(inputOptionsStoptokensFrame, text=LOCAL["d_use_stoptokens"], variable=useStoptokensValue, onvalue=1, offvalue=0)
 
-includeLPValueCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Local Position Value(sentence)", variable=includeLPValue, onvalue=1, offvalue=0)
-includeTokenCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Token", variable=includeToken, onvalue=1, offvalue=0)
-includeSentenceCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Sentence", variable=includeSentence, onvalue=1, offvalue=0)
-includeIndexCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Index (with stoptokens excluded)", variable=includeIndex, onvalue=1, offvalue=0)
-includeTotalCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Absolute Position Value(full text)", variable=includeTotal, onvalue=1, offvalue=0)
-includeSeparatorCheckBtn = Checkbutton(outputOptionsFormatFrame, text="Append separator after local results", variable=includeSeparator, onvalue=1, offvalue=0)
+includeLPValueCheckBtn = Checkbutton(outputOptionsFormatFrame, text=LOCAL["d_local_position_value"], variable=includeLPValue, onvalue=1, offvalue=0)
+includeTokenCheckBtn = Checkbutton(outputOptionsFormatFrame, text=LOCAL["d_token"], variable=includeToken, onvalue=1, offvalue=0)
+includeSentenceCheckBtn = Checkbutton(outputOptionsFormatFrame, text=LOCAL["d_sentence"], variable=includeSentence, onvalue=1, offvalue=0)
+includeIndexCheckBtn = Checkbutton(outputOptionsFormatFrame, text=LOCAL["d_index"], variable=includeIndex, onvalue=1, offvalue=0)
+includeTotalCheckBtn = Checkbutton(outputOptionsFormatFrame, text=LOCAL["d_absolute_position_value"], variable=includeTotal, onvalue=1, offvalue=0)
+includeSeparatorCheckBtn = Checkbutton(outputOptionsFormatFrame, text=LOCAL["d_append_separator"], variable=includeSeparator, onvalue=1, offvalue=0)
 
 useStoptokensCheckBtn.select()
 
