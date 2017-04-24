@@ -6,7 +6,6 @@ from math import floor, ceil
 import re
 from tkinter.scrolledtext import ScrolledText
 
-
 FLOOR = 1
 ROUND = 2
 CEIL = 3
@@ -14,8 +13,8 @@ CEIL = 3
 RUSSIAN = {
     "d_open_text" : "Открыть текст для анализа",
     "d_save_results" : "Сохранить результаты",
-    "d_import_stoptokens" : "Импорт токенов-исключений",
-    "d_save_stoptokens" : "Экспорт токенов-исключений",
+    "d_import_stop_tokens" : "Импортировать исключения",
+    "d_save_stop_tokens" : "Экспортировать исключения",
     "d_exit": "Выйти",
     "d_file": "Файл",
     "d_process": "Обработать",
@@ -28,7 +27,7 @@ RUSSIAN = {
     "d_tokens_to_exclude": "Токены-исключения",
     "d_open": "Открыть",
     "d_save": "Сохранить",
-    "d_use_stoptokens": "Использовать исключения",
+    "d_use_stop_tokens": "Использовать исключения",
     "d_multiplier": "Множитель",
     "d_rounding_type": "Тип округления",
     "d_floor": "К меньшему",
@@ -40,14 +39,80 @@ RUSSIAN = {
     "d_output": "Результаты",
     "d_formatting_options": "Настройки вывода",
     "d_index": "Позиция (в тексте БЕЗ токенов-исключений)",
-    "d_local_position_value": "Выводить значение позиции(предложение)",
+    "d_local_position_value": "Выводить значение позиции (предложение)",
     "d_token": "Токен",
     "d_sentence": "Предложение",
-    "d_absolute_position_value": "Выводить значение позиции(текст)",
+    "d_absolute_position_value": "Выводить значение позиции (текст)",
     "d_append_separator": "Добавить разделитель",
+    "o_absolute_beginning": "Абсолютное начало",
+    "o_beginning": "Зачин",
+    "o_harmonic_center_beginning": "Гармонический центр зоны начала",
+    "o_absolute_weak_position_1": "АСП1",
+    "o_harmonic_center": "Гармонический центр",
+    "o_absolute_weak_position_2": "АСП2",
+    "o_absolute_end": "Абсолютный конец",
+    "o_absolute_values_full_text": "Абсолютные значения (текст)",
+    "p_tokens": "Токены",
+    "p_stop_tokens": "Токены-исключения",
+    "p_multiplier": "Множитель",
+    "p_sentence": "Предложение",
+    "p_tokens_length": "Число токенов",
+    "p_local_harmonic_center_raw": "Локальный гармонический центр (без окр.)",
+    "p_absolute_harmonic_center_raw": "Абсолютный гармонический центр (без окр.)",
 }
 
-LOCAL = RUSSIAN
+ENGLISH = {
+    "d_open_text" : "Open text",
+    "d_save_results" : "Save analysis results",
+    "d_import_stop_tokens" : "Import stop-tokens from file",
+    "d_save_stop_tokens" : "Export stop-tokens to file",
+    "d_exit": "Exit",
+    "d_file": "File",
+    "d_process": "Process",
+    "d_get_left": "AWP2",
+    "d_get_center": "Harmonic center",
+    "d_get_right": "AWP1",
+    "d_help" : "Help",
+    "d_about": "About",
+    "d_input": "Input:",
+    "d_tokens_to_exclude": "Tokens to exclude",
+    "d_open": "Open",
+    "d_save": "Save",
+    "d_use_stop_tokens": "Use stop-tokens",
+    "d_multiplier": "Multiplier",
+    "d_rounding_type": "Rounding type",
+    "d_floor": "Floor",
+    "d_ceil": "Ceil",
+    "d_round": "Round",
+    "d_get_ap": "Get AP",
+    "d_center": "Center",
+    "d_center_abbr": "C",
+    "d_output": "Output",
+    "d_formatting_options": "Formatting options",
+    "d_index": "Position (with stop-tokens EXCLUDED)",
+    "d_local_position_value": "Show position value (sentence)",
+    "d_token": "Token",
+    "d_sentence": "Sentence",
+    "d_absolute_position_value": "Show position value (text)",
+    "d_append_separator": "Append separator",
+    "o_absolute_beginning": "Absolute beginning",
+    "o_beginning": "Beginning",
+    "o_harmonic_center_beginning": "Harmonic center (beginning)",
+    "o_absolute_weak_position_1": "AWP1",
+    "o_harmonic_center": "Harmonic center",
+    "o_absolute_weak_position_2": "AWP2",
+    "o_absolute_end": "Absolute end",
+    "o_absolute_values_full_text": "Absolute values (text)",
+    "p_tokens": "Tokens",
+    "p_stop_tokens": "Stop-tokens",
+    "p_multiplier": "Multiplier",
+    "p_sentence": "Sentence",
+    "p_tokens_length": "Tokens length",
+    "p_local_harmonic_center_raw": "Local harmonic center (raw)",
+    "p_absolute_harmonic_center_raw": "Absolute harmonic center (raw)",
+}
+
+LOCAL = ENGLISH
 
 
 def SaveResults():
@@ -101,11 +166,11 @@ def ProcessText(multiplier):
     if '' in stopTokens:
         stopTokens.remove('')
     
-    print("Stop tokens: ", stopTokens)
-    print("Multiplier: ", multiplier)
+    print("{}:".format(LOCAL["p_stop_tokens"]), stopTokens)
+    print("{}:".format(LOCAL["p_multiplier"]), multiplier)
 
     allTokens = []
-
+    
     for s in sentenses:
         tokens = re.split("[^а-яА-ЯёЁa-zA-Z0-9-]+", s)
         tokens = [i.strip() for i in tokens]
@@ -118,11 +183,11 @@ def ProcessText(multiplier):
 
         allTokens += tokens
         
-        print("Sentence: ", s, "\nTokens: ", tokens, " Length: ", len(tokens))
+        print("{}: {}\n{}: {} {}: {}".format(LOCAL["p_sentence"], s, LOCAL["p_tokens"], tokens, LOCAL["p_tokens_length"], len(tokens)))
 
         harmonicCenterRaw = (len(tokens) - 1) * multiplier
         
-        print("Local harmonic center(raw):", harmonicCenterRaw)
+        print("{}:".format(LOCAL["p_local_harmonic_center_raw"]), harmonicCenterRaw)
         
         harmonicCenter = harmonicCenterRaw
 
@@ -144,7 +209,7 @@ def ProcessText(multiplier):
     if includeTotal.get():
     
         absHarmonicCenterRaw = (len(allTokens) - 1) * multiplier
-        print("Absolute harmonic center(raw):", absHarmonicCenterRaw)
+        print("{}:".format(LOCAL["p_absolute_harmonic_center_raw"]), absHarmonicCenterRaw)
 
         absHarmonicCenter = absHarmonicCenterRaw
         if hType.get() == FLOOR:
@@ -155,7 +220,7 @@ def ProcessText(multiplier):
             absHarmonicCenter = ceil(absHarmonicCenter)
         else:
             raise ValueError("checkbuttons values incorrect, only one should be in SELECTED state")
-        resultBox.insert(END, "ABSOLUTE VALUE(FULL TEXT):\n")
+        resultBox.insert(END, "{}:\n".format(LOCAL["o_absolute_values_full_text"]))
         resultBox.insert(END, FormatOutput("", allTokens[absHarmonicCenter], absHarmonicCenter, absHarmonicCenterRaw, absHarmonicCenter))
         
 
@@ -172,37 +237,37 @@ def GetMultiplier():
     
 
 def ProcessZeroPos():
-    resultBox.insert(END, "Абсолютное начало:\n")
+    resultBox.insert(END, "{}:\n".format(LOCAL["o_absolute_beginning"]))
     ProcessText(0)
     
 
 def ProcessIntroPos():
-    resultBox.insert(END, "Зачин:\n")
+    resultBox.insert(END, "{}:\n".format(LOCAL["o_beginning"]))
     ProcessText(0.146)
 
 
 def ProcessHCIntroPos():
-    resultBox.insert(END, "Гармонический центр зоны начала:\n")
+    resultBox.insert(END, "{}:\n".format(LOCAL["o_harmonic_center_beginning"]))
     ProcessText(0.236)
     
 
 def ProcessLeftPos():
-    resultBox.insert(END, "АСП1:\n")
+    resultBox.insert(END, "{}:\n".format(LOCAL["o_absolute_weak_position_1"]))
     ProcessText(GetMultiplier()-0.236)
 
 
 def ProcessCenterPos():
-    resultBox.insert(END, "Гармонический центр:\n")
+    resultBox.insert(END, "{}:\n".format(LOCAL["o_harmonic_center"]))
     ProcessText(GetMultiplier())
 
     
 def ProcessRightPos():
-    resultBox.insert(END, "АСП2:\n")
+    resultBox.insert(END, "{}:\n".format(LOCAL["o_absolute_weak_position_2"]))
     ProcessText(GetMultiplier()+0.236)
 
 
 def ProcessEndPos():
-    resultBox.insert(END, "Абсолютный конец:\n")
+    resultBox.insert(END, "{}:\n".format(LOCAL["o_absolute_end"]))
     ProcessText(1)
 
     
@@ -231,8 +296,8 @@ menubar = Menu(root)
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label=LOCAL["d_open_text"], command=LoadText, accelerator="Ctrl+O")
 filemenu.add_command(label=LOCAL["d_save_results"], command=SaveResults, accelerator="Ctrl+S")
-filemenu.add_command(label=LOCAL["d_import_stoptokens"], command=LoadStoptokens)
-filemenu.add_command(label=LOCAL["d_save_stoptokens"], command=SaveStoptokens)
+filemenu.add_command(label=LOCAL["d_import_stop_tokens"], command=LoadStoptokens)
+filemenu.add_command(label=LOCAL["d_save_stop_tokens"], command=SaveStoptokens)
 filemenu.add_separator()
 filemenu.add_command(label=LOCAL["d_exit"], command=root.quit)
 menubar.add_cascade(label=LOCAL["d_file"], menu=filemenu)
@@ -303,8 +368,8 @@ multipliervalueEntry = Entry(inputOptionsMultiplierFrame, font='Verdana 14', tex
 ### BUTTONS
 
 loadtextBtn = Button(inputFrame, text = LOCAL["d_open_text"], command = LoadText)
-loadstoptextBtn = Button(inputOptionsStoptokensFrame, text = LOCAL["d_import_stoptokens"], command = LoadStoptokens)
-savestoptextBtn = Button(inputOptionsStoptokensFrame, text = LOCAL["d_save_stoptokens"], command = SaveStoptokens)
+loadstoptextBtn = Button(inputOptionsStoptokensFrame, text = LOCAL["d_import_stop_tokens"], command = LoadStoptokens)
+savestoptextBtn = Button(inputOptionsStoptokensFrame, text = LOCAL["d_save_stop_tokens"], command = SaveStoptokens)
 saveresultsBtn = Button(outputFrame, text = LOCAL["d_save_results"], command = SaveResults)
 
 
@@ -338,7 +403,7 @@ includeIndex = IntVar()
 includeTotal = IntVar()
 includeSeparator = IntVar()
 
-useStoptokensCheckBtn = Checkbutton(inputOptionsStoptokensFrame, text=LOCAL["d_use_stoptokens"], variable=useStoptokensValue, onvalue=1, offvalue=0)
+useStoptokensCheckBtn = Checkbutton(inputOptionsStoptokensFrame, text=LOCAL["d_use_stop_tokens"], variable=useStoptokensValue, onvalue=1, offvalue=0)
 
 includeLPValueCheckBtn = Checkbutton(outputOptionsFormatFrame, text=LOCAL["d_local_position_value"], variable=includeLPValue, onvalue=1, offvalue=0)
 includeTokenCheckBtn = Checkbutton(outputOptionsFormatFrame, text=LOCAL["d_token"], variable=includeToken, onvalue=1, offvalue=0)
